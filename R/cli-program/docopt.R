@@ -32,7 +32,7 @@ Options:
         doc = glue::glue(optdoc)
        ,args = if(is.null(.debug_args)) commandArgs(trailingOnly = TRUE) else .debug_args
        ,strict = TRUE
-    ) %>% {flog.debug(sstr(., .name = "raw cli args"))}
+    ) %T>% {flog.debug(sstr(., .name = "raw cli args"))}
 
     ##--------------------------------------------------------------------------------
     ## Parsing functions:

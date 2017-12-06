@@ -1,17 +1,19 @@
+PROGNAME <- "boilerplate"
+
 .DEBUG <- interactive() || FALSE
 if(.DEBUG) {
     warning("WARNING! DEBUG MODE IS ON!")
+    RAW_CLI_ARGS <- character(0)
 } else {
     library <- function(...) suppressPackageStartupMessages(base::library(...))
-    ##reg.finalizer(globalenv(), function(env) print(sessioninfo::session_info()), onexit = TRUE)
+    RAW_CLI_ARGS <- commandArgs(trailingOnly = TRUE)
 }
 
 library(methods)
 library(zzz)
 library(futile.logger); invisible(flog.threshold(DEBUG))
-library(tidyverse); library(magrittr)
+library(magrittr); library(tidyverse)
 
 source("docopt.R")
 
-PROGNAME <- "boilerplate"
-ARGS <- DOCOPT(PROGNAME, .DEBUG)
+ARGS <- DOCOPT(PROGNAME, RAW_CLI_ARGS)

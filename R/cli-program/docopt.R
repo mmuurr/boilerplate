@@ -1,13 +1,13 @@
 ## require(docopt)
 ## require(stringr)
 ## require(glue)
-## require(futile.logger)
-## require(magrittr) ## for %>% and %T>%
+## library(futile.logger)
+## library(magrittr) ## for %>% and %T>%
 ## require(checkmate)
 ## require(zzz) ## Mur's package
 
 ## Will use commandArgs(trailingOnly = TRUE) if .debug_args is NULL.
-DOCOPT <- function(progname, .debug_args = NULL) {
+DOCOPT <- function(progname, args = commandArgs(trailingOnly = TRUE)) {
     ##--------------------------------------------------------------------------------
     ## Docopt doc:
     ##--------------------------------------------------------------------------------
@@ -20,19 +20,14 @@ Usage:
 
 Options:
   --opt-name=VAL [default: default-val]
-" %>% stringr::str_sub(2, -1) ## strip away the leading \n
-    ## put any other glue-d vals for the optdoc here (e.g. context-specific defaults, like time).
-    #other_glue_arg <- "something to put in the optdoc"
+" %>% stringr::str_trim()
 
     ##--------------------------------------------------------------------------------
     ## Parse CLI:
     ##--------------------------------------------------------------------------------
     flog.info("parsing CLI args")
-    cli_args <- docopt::docopt(
-        doc = glue::glue(optdoc)
-       ,args = if(is.null(.debug_args)) commandArgs(trailingOnly = TRUE) else .debug_args
-       ,strict = TRUE
-    ) %T>% {flog.debug(sstr(., .name = "raw cli args"))}
+    cli_args <- docopt::docopt(doc = glue::glue(optdoc), args, strict = TRUE) %T>%
+        { flog.debug(zzz::sstr(., .name = "parsed cli args")) }
 
     ##--------------------------------------------------------------------------------
     ## Parsing functions:
@@ -90,6 +85,6 @@ Options:
        ,from_dt__incl = parse_time("--from")
        ,to_dt__excl = parse_time("--to")
     ) %T>%
-        {flog.debug(sstr(., .name = "parsed cli args"))} %>%
+        {flog.debug(sstr(., .name = "processed cli args"))} %>%
         return()
 }

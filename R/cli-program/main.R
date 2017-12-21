@@ -3,7 +3,7 @@ PROGNAME <- "boilerplate"
 .DEBUG <- interactive() || FALSE
 if(.DEBUG) {
     warning("WARNING! DEBUG MODE IS ON!")
-    RAW_CLI_ARGS <- character(0)
+    RAW_CLI_ARGS <- c("some", "args", "here")
 } else {
     library <- function(...) suppressPackageStartupMessages(base::library(...))
     RAW_CLI_ARGS <- commandArgs(trailingOnly = TRUE)
@@ -16,4 +16,4 @@ library(magrittr); library(tidyverse)
 
 source("docopt.R")
 
-ARGS <- DOCOPT(PROGNAME, RAW_CLI_ARGS)
+ARGS <- DOCOPT(PROGNAME, RAW_CLI_ARGS) %T>% {flog.info(sstr(., .name = "ARGS"))}

@@ -1,19 +1,22 @@
 PROGNAME <- "boilerplate"
 
-.DEBUG <- interactive() || FALSE
-if(.DEBUG) {
-    warning("WARNING! DEBUG MODE IS ON!")
-    RAW_CLI_ARGS <- c("some", "args", "here")
+.DEBUG_ARGS <- character(0)
+if(interactive()) {
+    RAW_CLI_ARGS <- .DEBUG_ARGS
 } else {
-    library <- function(...) suppressPackageStartupMessages(base::library(...))
     RAW_CLI_ARGS <- commandArgs(trailingOnly = TRUE)
+    library <- function(...) suppressPackageStartupMessages(base::library(...))
 }
 
 library(methods)
-library(zzz)
-library(futile.logger); invisible(flog.threshold(DEBUG))
-library(magrittr); library(tidyverse)
+##library(magrittr)
+##library(tidyverse)
+##library(futile.logger); invisible(flog.threshold(if(interactive()) TRACE else INFO))
+##library(zzz)
 
-source("docopt.R")
+## source any additional R code:
+purrr::walk(c("docopt.R"), source)
 
-ARGS <- DOCOPT(PROGNAME, RAW_CLI_ARGS) %T>% {flog.info(sstr(., .name = "ARGS"))}
+## parse & process CLI args:
+ARGS <- DOCOPT(PROGNAME, RAW_CLI_ARGS) %T>%
+    { flog.info(zzz::sstr(., .name = "ARGS")) }

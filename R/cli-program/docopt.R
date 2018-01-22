@@ -1,12 +1,11 @@
 ## require(docopt)
-## require(stringr)
 ## require(glue)
-## library(futile.logger)
-## library(magrittr) ## for %>% and %T>%
-## require(checkmate)
-## require(zzz) ## Mur's package
+## require(stringr)
+## require(checkmate) ## optionally
+## require(zzz)
+## require(magrittr) ## for %>% and %T>%
 
-DOCOPT <- function(progname, args = commandArgs(trailingOnly = TRUE)) {
+DOCOPT <- function(progname, raw_args = commandArgs(trailingOnly = TRUE)) {
     ##--------------------------------------------------------------------------------
     ## Docopt doc:
     ##--------------------------------------------------------------------------------
@@ -25,7 +24,7 @@ Options:
     ##--------------------------------------------------------------------------------
     ## Parse raw args:
     ##--------------------------------------------------------------------------------
-    flog.info("parsing raw CLI args")
+    flog.debug("parsing raw CLI args")
     PARSED_ARGS <- docopt::docopt(doc = glue::glue(optdoc), args, strict = TRUE) %T>%
         { flog.debug(zzz::sstr(., .name = "parsed args")) }
 

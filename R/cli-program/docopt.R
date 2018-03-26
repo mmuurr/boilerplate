@@ -1,3 +1,5 @@
+## raw_args -> PARSED_ARGS -> processed args (as a list)
+
 ## require(docopt)
 ## require(glue)
 ## require(stringr)
@@ -25,7 +27,7 @@ Options:
     ## Parse raw args:
     ##--------------------------------------------------------------------------------
     flog.debug("parsing raw CLI args")
-    PARSED_ARGS <- docopt::docopt(doc = glue::glue(optdoc), args, strict = TRUE) %T>%
+    PARSED_ARGS <- docopt::docopt(doc = glue::glue(optdoc), raw_args, strict = TRUE) %T>%
         { flog.debug(zzz::sstr(., .name = "parsed args")) }
 
     

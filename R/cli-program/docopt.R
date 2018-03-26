@@ -32,6 +32,12 @@ Options:
     ##--------------------------------------------------------------------------------
     ## Processing functions:
     ##--------------------------------------------------------------------------------
+    process_commands <- function() {
+        PARSED_ARGS[c("command1", "command2")] %>%
+            unlist() %>%
+            {keep(.,.)} %>%
+            names()
+    }
     process_arg1 <- function(argname = "--arg-name") {
         if(is.null(PARSED_ARGS[[argname]])) return(character(0))
         PARSED_ARGS[[argname]] %T>%

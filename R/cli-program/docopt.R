@@ -20,14 +20,16 @@ Usage:
 
 Options:
   --opt-name=VAL [default: default-val]
-" %>% stringr::str_trim()
+" %>%
+    stringr::str_trim() %>%
+    glue::glue()
 
     
     ##--------------------------------------------------------------------------------
     ## Parse raw args:
     ##--------------------------------------------------------------------------------
     flog.debug("parsing raw CLI args")
-    PARSED_ARGS <- docopt::docopt(doc = glue::glue(optdoc), raw_args, strict = TRUE) %T>%
+    PARSED_ARGS <- docopt::docopt(optdoc, raw_args, strict = TRUE) %T>%
         { flog.debug(zzz::sstr(., .name = "parsed args")) }
 
     

@@ -9,14 +9,12 @@ if(interactive()) {
 }
 
 library(methods)
-##library(magrittr)
-##library(tidyverse)
-##library(futile.logger); invisible(flog.threshold(if(interactive()) TRACE else INFO))
-##library(zzz)
+library(magrittr); library(tidyverse)
+library(futile.logger); invisible(flog.threshold(if(interactive()) TRACE else INFO))
+library(zzz)
 
-## source any additional R code:
-purrr::walk(c("docopt.R"), source)
+source("docopt.R")
 
-## parse & process CLI args:
 ARGS <- DOCOPT(PROGNAME, RAW_CLI_ARGS) %T>%
-    { flog.info(zzz::sstr(., .name = "ARGS")) }
+    { flog.info(sstr(., .name = "ARGS")) }
+

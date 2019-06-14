@@ -1,22 +1,45 @@
-PROGNAME <- "boilerplate"
+#!/usr/bin/R
+PROGNAME <- "boilerplate"  ## <-- set program name
 
+
+##------------------------------------------------------------------------------
+## interactive == debug mode
+##------------------------------------------------------------------------------
 .DEBUG_ARGS <- character(0)
-if(interactive()) {
+.DEBUG <- interactive() || FALSE
+
+if(.DEBUG) {
+    warning("WARNING: DEBUG MODE IS ON!")
     RAW_CLI_ARGS <- .DEBUG_ARGS
 } else {
+    library <- function(...) suppressPackageStartupMessages(base::library(...))  ## quiet library()
     RAW_CLI_ARGS <- commandArgs(trailingOnly = TRUE)
-    library <- function(...) suppressPackageStartupMessages(base::library(...))
 }
 
+
+##------------------------------------------------------------------------------
+## default logger setup
+##------------------------------------------------------------------------------
+library(futile.logger)
+if(.DEBUG) {
+    invisible(flog.threshold(TRACE))
+    invisible(flog.layout(layout.format("[~l ~t ~n:::~f] ~m", "%FT%T%z"), "ROOT"))
+} else {
+    invisible(flog.threshold(INFO))
+    invisible(flog.layout(layout.format("[~l ~t] ~m", "%FT%T%z"), "ROOT"))
+}
+
+
+##------------------------------------------------------------------------------
+## rest of preamble (library, source, import::from, etc.)
+##------------------------------------------------------------------------------
 library(methods)
-##library(magrittr)
-##library(tidyverse)
-##library(futile.logger); invisible(flog.threshold(if(interactive()) TRACE else INFO))
-##library(zzz)
 
-## source any additional R code:
-purrr::walk(c("docopt.R"), source)
 
-## parse & process CLI args:
-ARGS <- DOCOPT(PROGNAME, RAW_CLI_ARGS) %T>%
-    { flog.info(zzz::sstr(., .name = "ARGS")) }
+##------------------------------------------------------------------------------
+## cli args
+##------------------------------------------------------------------------------
+source("docopt.R")
+ARGS <- DOCOPT(RAW_CLI_ARGS, PROGNAME)
+
+

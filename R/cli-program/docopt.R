@@ -1,13 +1,10 @@
-## raw_args -> PARSED_ARGS -> processed args (as a list)
+## Imports: docopt, glue, stringr, checkmate, zzz, magrittr
 
-## require(docopt)
-## require(glue)
-## require(stringr)
-## require(checkmate) ## optionally
-## require(zzz)
-## require(magrittr) ## for %>% and %T>%
-
-DOCOPT <- function(progname, raw_args = commandArgs(trailingOnly = TRUE)) {
+DOCOPT <- function(raw_args = commandArgs(trailingOnly = TRUE), progname = "boilerplate") {
+    ## selective infix imports:
+    `%>%` <- magrittr::`%>%`
+    `%T>%` <- magrittr::`%T>%`
+    
     ##--------------------------------------------------------------------------------
     ## Docopt doc:
     ##--------------------------------------------------------------------------------
@@ -32,19 +29,8 @@ Options:
 
     
     ##--------------------------------------------------------------------------------
-    ## Processing functions:
+    ## Processing functions (that assert):
     ##--------------------------------------------------------------------------------
-    process_commands <- function() {
-        PARSED_ARGS[c("command1", "command2")] %>%
-            unlist() %>%
-            {keep(.,.)} %>%
-            names()
-    }
-    process_arg1 <- function(argname = "--arg-name") {
-        if(is.null(PARSED_ARGS[[argname]])) return(character(0))
-        PARSED_ARGS[[argname]] %T>%
-            checkmate::assertString(pattern = "^foo|bar$", .var.name = argname)
-    }
     process_db_user <- function(argname) {
         PARSED_ARGS[[argname]] %T>%
             checkmate::assertString(min.chars = 1, .var.name = argname)
@@ -62,10 +48,10 @@ Options:
                   } else {
                       stop("unrecognized subcommand")
                   }
-       ,arg1 = process_arg1()
+       ,arg1 = PARSED_ARGS[["--opt-name"]]
        ,db_user_1 = process_db_user("--db-user-1")
        ,db_user_2 = process_db_user("--db-user-2")
     ) %T>%
-        { flog.debug(sstr(., .name = "processed CLI args")) } %>%
+        { flog.debug(zzz::sstr(., .name = "processed CLI args")) } %>%
         return()
 }
